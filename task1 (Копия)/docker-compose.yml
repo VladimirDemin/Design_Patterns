@@ -1,0 +1,39 @@
+services:
+  app:
+    image: iu5devops/app
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: iu5devops-app
+    networks:
+      - iu5devops
+    ports:
+      - 8080:5000
+    environment:
+      - APP_SERVICE_NAME=iu5devops-app
+      - TRACE_ENDPOINT=http://iu5devops-jaeger:4317
+
+  jaeger:
+    image: jaegertracing/all-in-one
+    container_name: iu5devops-jaeger
+    networks:
+      - iu5devops
+    ports:
+      - 16686:16686
+
+  prometheus:
+    image: prom/prometheus
+    container_name: iu5devops-prometheus
+    networks:
+      - iu5devops
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+
+volumes:
+  prometheus-data: {}
+
+networks:
+  iu5devops: {}
