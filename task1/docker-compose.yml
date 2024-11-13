@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  worker1:
+    build:
+      context: ./worker1
+    volumes:
+      - type: bind
+        source: ./data
+        target: /var/data
+      - type: bind
+        source: ./result-1
+        target: /var/result
+
+  worker2:
+    build:
+      context: ./worker2
+    volumes:
+      - type: bind
+        source: ./result-1
+        target: /var/data
+      - type: bind
+        source: ./result
+        target: /var/result
+    depends_on:
+      - worker1
